@@ -1,0 +1,14 @@
+sequenceDiagram
+    participant browser
+    participant server
+
+    Note right of browser: User types a note and clicks "Save"
+
+    browser->>browser: JavaScript captures the note content and date
+    browser->>server: POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa (data: { content: "User's note content", date: "current date" })
+    activate server
+    server-->>browser: Response with success status
+    deactivate server
+
+    Note right of browser: JavaScript adds the new note to the existing notes list without reloading the page
+    browser->>browser: JavaScript renders the updated list of notes
