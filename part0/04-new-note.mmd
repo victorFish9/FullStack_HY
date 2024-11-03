@@ -1,0 +1,36 @@
+sequenceDiagram
+    participant browser
+    participant server
+
+    Note right of browser: User types a note and clicks "Save"
+
+    browser->>server: POST https://studies.cs.helsinki.fi/exampleapp/new_note (data: { content: "User's note content", date: "current date" })
+    activate server
+    server-->>browser: Redirect to /notes
+    deactivate server
+
+    Note right of browser: Browser reloads the page after receiving the redirect
+
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/notes
+    activate server
+    server-->>browser: HTML document
+    deactivate server
+
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
+    activate server
+    server-->>browser: the css file
+    deactivate server
+
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.js
+    activate server
+    server-->>browser: the JavaScript file
+    deactivate server
+
+    Note right of browser: The JavaScript fetches the updated JSON data
+
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
+    activate server
+    server-->>browser: Updated JSON data [{ "content": "HTML is easy", "date": "2023-1-1" }, { "content": "User's note content", "date": "current date" }, ... ]
+    deactivate server
+
+    Note right of browser: Browser renders the updated list of notes
