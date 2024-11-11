@@ -23,23 +23,19 @@ const App = () => {
   const addOrUpdatePerson = (event) => {
     event.preventDefault();
     const existingPerson = persons.find(person => person.name === newName);
-    const personObject = {
-      name: newName,
-      number: newNumber,
-    };
+    const personObject = { name: newName, number: newNumber };
 
     if (existingPerson) {
       if (window.confirm(`${newName} is already in the phonebook. Replace the old number with a new one?`)) {
         personService.update(existingPerson.id, personObject)
           .then(response => {
-            setPersons(persons.map(person => person.id !== existingPerson.id ? person : response.data));
+            setPersons(persons.map(p => p.id !== existingPerson.id ? p : response.data));
             setNewName('');
             setNewNumber('');
             showNotification(`Updated ${newName}'s number`);
           })
           .catch(error => {
-            showError(`The person '${newName}' was already removed from the server`);
-            setPersons(persons.filter(person => person.id !== existingPerson.id));
+            showError(error.response.data.error);
           });
       }
     } else {
@@ -50,9 +46,13 @@ const App = () => {
           setNewNumber('');
           showNotification(`Added ${newName}`);
         })
+        .catch(error => {
+          showError(error.response.data.error);
+        });
     }
+  };
 
-  }
+
 
   const deletePerson = (id, name) => {
     if (window.confirm(`Delete ${name}?`)) {
