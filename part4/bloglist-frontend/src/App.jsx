@@ -106,6 +106,21 @@ const App = () => {
     </form>
   )
 
+  const updateBlog = (updateBlog) => {
+    setBlogs(blogs.map(blog => (blog.id === updateBlog.id ? updateBlog : blog)))
+  }
+
+  const handleDelete = async (blog) => {
+    try {
+      await blogService.remove(blog.id)
+      setBlogs(blogs.filter(b => b.id !== blog.id))
+      showNotification(`Blog "${blog.title}" deleted successfully`)
+    } catch (exception) {
+      showNotification('Failed to delete')
+    }
+  }
+
+  const sortedBlogs = blogs.sort((a, b) => b.likes - a.likes)
 
   return (
     <div>
@@ -115,8 +130,8 @@ const App = () => {
 
       {user === null ? (loginForm()) : <>
         <p>{user.name} logged in <button onClick={handleLogout}>logout</button></p>
-        {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} />
+        {sortedBlogs.map(blog =>
+          <Blog key={blog.id} blog={blog} user={user} updateBlog={updateBlog} handleDelete={handleDelete} />
         )
         }
         <Togglable buttonLabel='new blog' ref={blogFormRef}>
