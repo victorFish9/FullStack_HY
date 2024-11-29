@@ -3,10 +3,12 @@ import { voteAnecdote } from '../reducers/anecdoteReducer';
 
 const AnecdoteList = () => {
     const anecdotes = useSelector(({ anecdotes, filter }) => {
+        const filterValue = filter || ''; // Fallback to empty string if filter is undefined
         return anecdotes.filter((anecdote) =>
-            anecdote.content.toLowerCase().includes(filter.toLowerCase())
+            anecdote.content?.toLowerCase().includes(filterValue.toLowerCase()) // Ensure content is not undefined
         );
     });
+
     const dispatch = useDispatch();
 
     const vote = (id) => {
