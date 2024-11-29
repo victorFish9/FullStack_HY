@@ -1,18 +1,18 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { voteAnecdote } from '../reducers/anecdoteReducer';
+import { setTimedNotification } from '../reducers/notificationReducer';
 
 const AnecdoteList = () => {
-    const anecdotes = useSelector(({ anecdotes, filter }) => {
-        const filterValue = filter || ''; // Fallback to empty string if filter is undefined
-        return anecdotes.filter((anecdote) =>
-            anecdote.content?.toLowerCase().includes(filterValue.toLowerCase()) // Ensure content is not undefined
-        );
-    });
-
+    const anecdotes = useSelector(({ anecdotes, filter }) =>
+        anecdotes.filter((anecdote) =>
+            anecdote.content.toLowerCase().includes(filter.toLowerCase())
+        )
+    );
     const dispatch = useDispatch();
 
-    const vote = (id) => {
+    const vote = (id, content) => {
         dispatch(voteAnecdote(id));
+        dispatch(setTimedNotification(`You voted '${content}'`, 5));
     };
 
     return (
@@ -22,7 +22,7 @@ const AnecdoteList = () => {
                     <div>{anecdote.content}</div>
                     <div>
                         has {anecdote.votes} votes
-                        <button onClick={() => vote(anecdote.id)}>vote</button>
+                        <button onClick={() => vote(anecdote.id, anecdote.content)}>vote</button>
                     </div>
                 </div>
             ))}
