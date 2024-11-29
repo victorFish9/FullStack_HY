@@ -1,7 +1,7 @@
 import Togglable from './Togglable'
 import blogService from '../services/blogs'
 
-const Blog = ({ blog, updateBlog, handleDelete, user }) => {
+const Blog = ({ blog, updateBlog, handleDelete, user, toggleImportance }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -14,7 +14,7 @@ const Blog = ({ blog, updateBlog, handleDelete, user }) => {
     const updatedBlog = {
       ...blog,
       likes: blog.likes + 1,
-      user: blog.user.id || blog.user
+      user: blog.user?.id || blog.user || null
     }
 
     try {
@@ -34,20 +34,19 @@ const Blog = ({ blog, updateBlog, handleDelete, user }) => {
 
 
   return (
-    <div style={blogStyle}>
-      <div>
-        <strong>{blog.title}</strong>
-        <Togglable buttonLabel="view">
+    <div style={blogStyle} className="blog">
+      <div className="blogTitleAuthor">
+        <strong>{blog.title}</strong> by {blog.user?.name || 'Anonymous'}
+      </div>
+      <Togglable buttonLabel="view">
+        <div className="blogDetails">
           <p>URL: {blog.url}</p>
           <p>Likes: {blog.likes} <button onClick={handleLike}>like</button></p>
-          <p>Added by: {blog.user?.name || 'Anonymous'}</p>
-          <div>
-            {user && blog.user.username === user.username && (
-              <button onClick={confirmAndDelete} style={{ color: 'red' }}>delete</button>
-            )}
-          </div>
-        </Togglable>
-      </div>
+          {user && blog.user.username === user.username && (
+            <button onClick={confirmAndDelete} style={{ color: 'red' }}>delete</button>
+          )}
+        </div>
+      </Togglable>
     </div>
   )
 }

@@ -82,7 +82,7 @@ const App = () => {
   }
 
   const loginForm = () => (
-    <form onSubmit={handleLogin}>
+    <form onSubmit={handleLogin} role='form'>
       <div>
         username
         <input
